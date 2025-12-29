@@ -1,17 +1,22 @@
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
-  const [message, setMessage] = useState("ゲームを進めますか？");
+  const navigate = useNavigate();
 
-  const handleYes = () => setMessage("OK！ゲームを開始します！");
-  const handleNo = () => setMessage("了解！また今度にしましょう。");
+  const handleYes = () => {
+    navigate("/game");
+  };
+
+  const handleNo = () => {
+    // 今まで通り
+  };
 
   return (
     <div className="w-[min(90vw,420px)] flex flex-col items-center text-center gap-4">
       <h1 className="text-3xl font-bold">Yes-man</h1>
-      <p className="text-lg">{message}</p>
+      <p className="text-lg">ゲームを進めますか？</p>
 
-      <div className="flex justify-center gap-3">
+      <div className="flex gap-3">
         <button
           onClick={handleYes}
           className="px-5 py-2 rounded bg-blue-500 text-white"

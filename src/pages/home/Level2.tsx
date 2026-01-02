@@ -1,4 +1,3 @@
-// src/pages/home/Level2.tsx など（場所は自由）
 import Button from "../../components/Button";
 
 type Props = {

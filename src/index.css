@@ -1,1 +1,24 @@
 @import "tailwindcss";
+
+@keyframes tired-bob {
+  0% { transform: translateY(0); }
+  25% { transform: translateY(-6px); }
+  50% { transform: translateY(0); }
+  75% { transform: translateY(6px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes sweat-pop {
+  0% { transform: translateY(0) scale(0.9); opacity: 0; }
+  40% { transform: translateY(-4px) scale(1.1); opacity: 1; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* Tailwindのユーティリティっぽく使うためのclass */
+.animate-tired-bob {
+  animation: tired-bob 0.35s ease-in-out infinite;
+}
+
+.animate-sweat-pop {
+  animation: sweat-pop 0.4s ease-out 1;
+}

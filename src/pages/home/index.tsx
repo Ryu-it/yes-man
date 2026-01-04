@@ -1,4 +1,3 @@
-// src/pages/home/Home.tsx
 import { useMemo, useState } from "react";
 import Button from "../../components/Button";
 

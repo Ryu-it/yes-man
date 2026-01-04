@@ -1,4 +1,3 @@
-// src/pages/home/ChasingYesButton.tsx
 import { useEffect, useRef, useState } from "react";
 import Button from "../../components/Button";
 

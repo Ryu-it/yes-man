@@ -9,6 +9,7 @@ import Level5 from "./Level5";
 import Level6 from "./Level6";
 import Level7 from "./Level7";
 import GameOver from "./GameOver";
+import GameClear from "./GameClear";
 
 // ✅ 追加：カーソルに近づいてくる「はい」
 import ChasingYesButton from "./ChasingYesButton";
@@ -24,7 +25,8 @@ type Screen =
   | "level5"
   | "level6"
   | "level7"
-  | "gameover";
+  | "gameover"
+  | "gameclear";
 
 export default function Home() {
   const [screen, setScreen] = useState<Screen>("home");
@@ -85,44 +87,58 @@ export default function Home() {
   }
   if (screen === "level7") {
     return (
-      <Level7 onYes={() => setScreen("home")} onNo={() => goGameOver("level7")} />
+      <Level7 onYes={() => setScreen("gameclear")} onNo={() => goGameOver("level7")} />
     );
   }
 
-  if (screen === "gameover") {
-    if (!gameOverView) {
-      return (
-        <div className="text-center space-y-4">
-          <h1 className="text-3xl font-bold text-red-600">ゲームオーバー</h1>
-          <Button
-            onClick={() => {
-              setGameOverFrom(null);
-              setScreen("home");
-            }}
-          >
-            最初から
-          </Button>
-        </div>
-      );
-    }
+  // ✅ ここを追加：gameclear は gameover と別の分岐
+if (screen === "gameclear") {
+  return (
+    <GameClear
+      onBack={() => {
+        setGameOverFrom(null);
+        setScreen("home");
+      }}
+    />
+  );
+}
 
+if (screen === "gameover") {
+  if (!gameOverView) {
     return (
-      <GameOver
-        title={gameOverView.title}
-        message={gameOverView.message}
-        shareUrl={shareUrl}
-        onBack={() => {
-          setGameOverFrom(null);
-          setScreen("home");
-        }}
-      />
+      <div className="text-center space-y-4">
+        <h1 className="text-3xl font-bold text-red-600">ゲームオーバー</h1>
+        <Button
+          onClick={() => {
+            setGameOverFrom(null);
+            setScreen("home");
+          }}
+        >
+          最初から
+        </Button>
+      </div>
     );
   }
+
+  return (
+    <GameOver
+      title={gameOverView.title}
+      message={gameOverView.message}
+      shareUrl={shareUrl}
+      onBack={() => {
+        setGameOverFrom(null);
+        setScreen("home");
+      }}
+    />
+  );
+}
+
 
   // ✅ home（ここを差し替え）
   return (
     <div className="w-full">
       <h1 className="text-3xl font-bold text-center mt-10">ゲーム開始！</h1>
+      <p className="text-xl text-center mt-10">はいがあなたに懐いている</p>
 
       {/* 追尾する「はい」 */}
       <ChasingYesButton onYes={() => setScreen("level2")} />

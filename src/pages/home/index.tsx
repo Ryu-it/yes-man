@@ -9,12 +9,24 @@ import Level5 from "./Level5";
 import Level6 from "./Level6";
 import Level7 from "./Level7";
 import GameOver from "./GameOver";
+import GameClear from "./GameClear";
+
+// ✅ 追加：カーソルに近づいてくる「はい」
+import ChasingYesButton from "./ChasingYesButton";
 
 import { GAME_OVER_CONFIG } from "./gameOverConfig";
 import type { LevelKey } from "./gameOverConfig";
 
-
-type Screen = "home" | "level2" | "level3" | "level4" | "level5" | "level6" | "level7" | "gameover";
+type Screen =
+  | "home"
+  | "level2"
+  | "level3"
+  | "level4"
+  | "level5"
+  | "level6"
+  | "level7"
+  | "gameover"
+  | "gameclear";
 
 export default function Home() {
   const [screen, setScreen] = useState<Screen>("home");
@@ -33,7 +45,6 @@ export default function Home() {
     const config = GAME_OVER_CONFIG[gameOverFrom];
     const text = config.shareText({ level: gameOverFrom });
 
-    // あなたの本番URLがあるならここに固定でもOK
     const url = window.location.href;
 
     const intent = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
@@ -50,63 +61,90 @@ export default function Home() {
   }, [gameOverFrom]);
 
   if (screen === "level2") {
-    return <Level2 onYes={() => setScreen("level3")} onNo={() => goGameOver("level2")} />;
+    return (
+      <Level2 onYes={() => setScreen("level3")} onNo={() => goGameOver("level2")} />
+    );
   }
   if (screen === "level3") {
-    return <Level3 onYes={() => setScreen("level4")} onNo={() => goGameOver("level3")} />;
+    return (
+      <Level3 onYes={() => setScreen("level4")} onNo={() => goGameOver("level3")} />
+    );
   }
   if (screen === "level4") {
-    return <Level4 onYes={() => setScreen("level5")} onNo={() => goGameOver("level4")} />;
+    return (
+      <Level4 onYes={() => setScreen("level5")} onNo={() => goGameOver("level4")} />
+    );
   }
   if (screen === "level5") {
-    return <Level5 onYes={() => setScreen("level6")} onNo={() => goGameOver("level5")} />;
+    return (
+      <Level5 onYes={() => setScreen("level6")} onNo={() => goGameOver("level5")} />
+    );
   }
   if (screen === "level6") {
-    return <Level6 onYes={() => setScreen("level7")} onNo={() => goGameOver("level6")} />;
+    return (
+      <Level6 onYes={() => setScreen("level7")} onNo={() => goGameOver("level6")} />
+    );
   }
   if (screen === "level7") {
-    return <Level7 onYes={() => setScreen("home")} onNo={() => goGameOver("level7")} />;
-  }
-
-  if (screen === "gameover") {
-    // ここは想定外（保険）。普通は gameOverFrom が必ず入る設計にする
-    if (!gameOverView) {
-      return (
-        <div className="text-center space-y-4">
-          <h1 className="text-3xl font-bold text-red-600">ゲームオーバー</h1>
-          <Button
-            onClick={() => {
-              setGameOverFrom(null);
-              setScreen("home");
-            }}
-          >
-            最初から
-          </Button>
-        </div>
-      );
-    }
-
     return (
-      <GameOver
-        title={gameOverView.title}
-        message={gameOverView.message}
-        shareUrl={shareUrl}
-        onBack={() => {
-          setGameOverFrom(null);
-          setScreen("home");
-        }}
-      />
+      <Level7 onYes={() => setScreen("gameclear")} onNo={() => goGameOver("level7")} />
     );
   }
 
-  // home
+  // ✅ ここを追加：gameclear は gameover と別の分岐
+if (screen === "gameclear") {
   return (
-    <div className="text-center space-y-4">
-      <h1 className="text-3xl font-bold">ゲーム開始！</h1>
-      <p>進みますか？</p>
+    <GameClear
+      onBack={() => {
+        setGameOverFrom(null);
+        setScreen("home");
+      }}
+    />
+  );
+}
 
-      <div className="flex justify-center gap-4">
-        <Button onClick={() => setScreen("level2")}>はい</Button>
+if (screen === "gameover") {
+  if (!gameOverView) {
+    return (
+      <div className="text-center space-y-4">
+        <h1 className="text-3xl font-bold text-red-600">ゲームオーバー</h1>
+        <Button
+          onClick={() => {
+            setGameOverFrom(null);
+            setScreen("home");
+          }}
+        >
+          最初から
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <GameOver
+      title={gameOverView.title}
+      message={gameOverView.message}
+      shareUrl={shareUrl}
+      onBack={() => {
+        setGameOverFrom(null);
+        setScreen("home");
+      }}
+    />
+  );
+}
+
+
+  // ✅ home（ここを差し替え）
+  return (
+    <div className="w-full">
+      <h1 className="text-3xl font-bold text-center mt-10">ゲーム開始！</h1>
+      <p className="text-xl text-center mt-10">はいがあなたに懐いている</p>
+
+      {/* 追尾する「はい」 */}
+      <ChasingYesButton onYes={() => setScreen("level2")} />
+
+      {/* いいえ（即ゲームオーバー） */}
+      <div className="flex justify-center mt-6">
         <Button onClick={() => goGameOver("level2")}>いいえ</Button>
       </div>
     </div>

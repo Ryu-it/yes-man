@@ -22,3 +22,83 @@
 .animate-sweat-pop {
   animation: sweat-pop 0.4s ease-out 1;
 }
+
+/* ここから追記 */
+@layer utilities {
+  @keyframes pop {
+    0% { opacity: 0; transform: translateY(10px) scale(0.98); }
+    60% { opacity: 1; transform: translateY(0) scale(1.0); }
+    100% { opacity: 1; transform: translateY(0) scale(1.0); }
+  }
+  .animate-pop { animation: pop 320ms ease-out; }
+
+  @keyframes lineIn {
+    0% { opacity: 0; transform: translateY(4px); filter: blur(1px); }
+    100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+  }
+  .animate-line { animation: lineIn 200ms ease-out both; }
+
+  @keyframes warn {
+    0% { opacity: 0; transform: translateY(-2px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  .animate-warn { animation: warn 180ms ease-out; }
+}
+
+@layer utilities {
+  /* ノイズ走査線 */
+  .scanlines {
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.10) 0px,
+      rgba(255,255,255,0.10) 1px,
+      rgba(0,0,0,0) 2px,
+      rgba(0,0,0,0) 6px
+    );
+  }
+
+  @keyframes jitter {
+    0% { transform: translate(0,0); }
+    20% { transform: translate(-0.5px, 0.3px); }
+    40% { transform: translate(0.7px, -0.4px); }
+    60% { transform: translate(-0.3px, -0.6px); }
+    80% { transform: translate(0.4px, 0.5px); }
+    100% { transform: translate(0,0); }
+  }
+
+  @keyframes skewWave {
+    0% { transform: skewX(0deg) skewY(0deg); }
+    50% { transform: skewX(0.8deg) skewY(-0.6deg); }
+    100% { transform: skewX(0deg) skewY(0deg); }
+  }
+
+  @keyframes glitchShift {
+    0% { filter: blur(0px) contrast(1); transform: translate(0,0) rotate(0deg); }
+    25% { filter: blur(0.5px) contrast(1.1); transform: translate(0.6px,-0.4px) rotate(0.1deg); }
+    50% { filter: blur(0.9px) contrast(1.15); transform: translate(-0.7px,0.5px) rotate(-0.15deg); }
+    75% { filter: blur(0.6px) contrast(1.08); transform: translate(0.3px,0.2px) rotate(0.12deg); }
+    100% { filter: blur(0px) contrast(1); transform: translate(0,0) rotate(0deg); }
+  }
+
+  @keyframes hueDrift {
+    0% { filter: hue-rotate(0deg) saturate(1.0); }
+    50% { filter: hue-rotate(10deg) saturate(1.2); }
+    100% { filter: hue-rotate(0deg) saturate(1.0); }
+  }
+
+  .chaos-1 { animation: jitter 120ms infinite linear; }
+  .chaos-2 { animation: jitter 110ms infinite linear, skewWave 900ms infinite ease-in-out; }
+  .chaos-3 { animation: jitter 100ms infinite linear, skewWave 800ms infinite ease-in-out, glitchShift 700ms infinite ease-in-out; }
+  .chaos-4 { animation: jitter 95ms infinite linear, skewWave 750ms infinite ease-in-out, glitchShift 620ms infinite ease-in-out, hueDrift 900ms infinite ease-in-out; }
+  .chaos-5 { animation: jitter 85ms infinite linear, skewWave 680ms infinite ease-in-out, glitchShift 520ms infinite ease-in-out, hueDrift 700ms infinite ease-in-out; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .chaos-1,
+    .chaos-2,
+    .chaos-3,
+    .chaos-4,
+    .chaos-5 {
+      animation: none !important;
+    }
+  }
+}
